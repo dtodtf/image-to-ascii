@@ -63,3 +63,9 @@ func convertToASCII(file io.Reader) {
 		fmt.Print("\n")
 	}
 }
+
+func errorCheck(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
