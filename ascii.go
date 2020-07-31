@@ -25,6 +25,9 @@ func getInput() string {
 	if len(os.Args) > 2 {
 		fmt.Println("Error: Only one file allowed!")
 		os.Exit(1)
+	} else if len(os.Args) == 0 {
+		fmt.Println("Error: must provide a file name.")
+		os.Exit(1)
 	}
 	fileName := os.Args[1]
 	fmt.Println("You want a picture of " + fileName + ", right?")
