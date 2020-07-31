@@ -13,9 +13,7 @@ func main() {
 	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
 	imageName := getInput()
 	imagePixels, err := os.Open("./" + imageName)
-	if err != nil {
-		log.Fatal(err)
-	}
+	errorCheck(err)
 	convertToASCII(imagePixels)
 }
 
@@ -39,9 +37,7 @@ func convertToASCII(file io.Reader) {
 	asciiChars := "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
 
 	img, _, err := image.Decode(file)
-	if err != nil {
-		log.Fatal(err)
-	}
+	errorCheck(err)
 
 	// Y outer loop X inner loop so we print row by row. Otherwise image is
 	// rotated
