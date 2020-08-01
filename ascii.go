@@ -25,14 +25,16 @@ func main() {
 	errorCheck(err)
 	img, _, err := image.Decode(openedFile)
 	errorCheck(err)
-	resizeImage(img, width, height)
+	img = resizeImage(img, width, height)
 	convertToASCII(img)
 }
 
 /*
  * Parameter: Nothing. Reads command line args
  * Purpose: Returns name of file to convert and size the new image should be.
+ * Returns: The image file name, the desired width, the desired height.
  */
+//TODO: get strict on arguments
 func commandLineArgs() (string, int64, int64) {
 	var fileName string
 	var width, height int64 = -1, -1
@@ -66,11 +68,15 @@ func commandLineArgs() (string, int64, int64) {
 
 /*
  * Parameters: image.Image to resize, width to resize to, height to resize to.
- * Purpose: Resize the image to the specified parameters
+ * Purpose: Resize the image to the specified parameters.
  * Returns: image.Image object.
  */ 
 func resizeImage(img image.Image, width int64, height int64) image.Image {
-	return resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
+	//User doesn't want to reseize
+	if width == -1 && height == -1 {
+		return img
+	}
+	return resize.Resize(uint(width), uint(height), img, resize.Lanczos3) //TODO: which algo should be here?
 }
 
 /*
@@ -116,6 +122,7 @@ func convertToASCII(img image.Image) {
 /*
  * Paramter: An error
  * Purpose: Crash the program if there is an error
+ * Returns: Nothing. Just crashes program.
  */
 func errorCheck(err error) {
 	if err != nil {
