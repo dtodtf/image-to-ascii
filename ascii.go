@@ -1,6 +1,6 @@
 /*
- *Dylan Todtfeld
- *Package lets user convert image into ascii art.
+ * Dylan Todtfeld
+ * Package lets user convert image into ascii art.
  */
 package main
 
@@ -11,12 +11,14 @@ import (
 	"io"
 	"log"
 	"os"
+	"github.com/nfnt/resize"
 )
 
+//TODO: suport image resizing
 func main() {
 	//TODO: support formats other than png
 	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
-	imageName := getInput()
+	imageName := commandLineArgs()
 	imagePixels, err := os.Open("./" + imageName)
 	errorCheck(err)
 	convertToASCII(imagePixels)
@@ -27,7 +29,7 @@ func main() {
  * Purpose: Returns name of file to convert. Ensures there is only one file
  *          provided.
  */
-func getInput() string {
+func commandLineArgs() string {
 	if len(os.Args) > 2 {
 		fmt.Println("Error: Only one file allowed!")
 		os.Exit(1)
