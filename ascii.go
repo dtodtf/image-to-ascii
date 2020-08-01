@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	//TODO: support formats other than png
 	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
 	imageName := getInput()
 	imagePixels, err := os.Open("./" + imageName)
@@ -21,6 +22,11 @@ func main() {
 	convertToASCII(imagePixels)
 }
 
+/*
+ * Parameter: Nothing. Reads command line args
+ * Purpose: Returns name of file to convert. Ensures there is only one file
+ *          provided.
+ */
 func getInput() string {
 	if len(os.Args) > 2 {
 		fmt.Println("Error: Only one file allowed!")
@@ -34,6 +40,11 @@ func getInput() string {
 	return fileName
 }
 
+/*
+ * Parameter: An io.Reader object
+ * Purpose: Decode image file. Iterate through pixels and determine brightness
+ *          of each pixel. Based on that, print the appropriate ASCII char.
+ */
 func convertToASCII(file io.Reader) {
 	var luminosity float32
 	var red, green, blue uint32
@@ -67,6 +78,10 @@ func convertToASCII(file io.Reader) {
 	}
 }
 
+/*
+ * Paramter: An error
+ * Purpose: Crash the program if there is an error
+ */
 func errorCheck(err error) {
 	if err != nil {
 		log.Fatal(err)
