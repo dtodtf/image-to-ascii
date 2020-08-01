@@ -9,31 +9,33 @@ import (
 	"fmt"
 	"image"
 	"image/png"
-	"io"
+	// "io"
 	"log"
 	"os"
 	"strconv"
-	// "github.com/nfnt/resize"
+	"github.com/nfnt/resize"
 )
 
 //TODO: suport image resizing
 func main() {
 	//TODO: support formats other than png
 	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
-	imageName := commandLineArgs()
-	imagePixels, err := os.Open("./" + imageName)
+	imageName, width, height := commandLineArgs()
+	openedFile, err := os.Open("./" + imageName)
 	errorCheck(err)
-	convertToASCII(imagePixels)
+	img, _, err := image.Decode(openedFile)
+	errorCheck(err)
+	resizeImage(img, width, height)
+	convertToASCII(img)
 }
 
 /*
  * Parameter: Nothing. Reads command line args
- * Purpose: Returns name of file to convert. Ensures there is only one file
- *          provided.
+ * Purpose: Returns name of file to convert and size the new image should be.
  */
-func commandLineArgs() string {
+func commandLineArgs() (string, int64, int64) {
 	var fileName string
-	var width, height int64
+	var width, height int64 = -1, -1
 	var err error
 
 	if len(os.Args) > 6 {
@@ -48,24 +50,36 @@ func commandLineArgs() string {
 			fileName = os.Args[i+1]
 		}
 		if os.Args[i] == "-r" {
+			//Fun trivia: ParseInt always returns int64. It's up to me to
+			//convert to int32 later!
 			width, err = strconv.ParseInt(os.Args[i+1], 10, 64)
 			errorCheck(err)
 			height, err = strconv.ParseInt(os.Args[i+2], 10, 64)
 			errorCheck(err)
 		}
 	}
-	fmt.Println("You want a picture of " + fileName + " that's " + strconv.FormatInt(width, 10) + " by " + strconv.FormatInt(height, 10) + ", right?")
-	return fileName
+	fmt.Println("You want a picture of " + fileName + " that's " +
+		strconv.FormatInt(width, 10) + " by " +
+		strconv.FormatInt(height, 10) + ", right?")
+	return fileName, width, height
 }
 
-
+/*
+ * Parameters: image.Image to resize, width to resize to, height to resize to.
+ * Purpose: Resize the image to the specified parameters
+ * Returns: image.Image object.
+ */ 
+func resizeImage(img image.Image, width int64, height int64) image.Image {
+	return resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
+}
 
 /*
- * Parameter: An io.Reader object
- * Purpose: Decode image file. Iterate through pixels and determine brightness
+ * Parameter: An image.Image object
+ * Purpose: Iterate through pixels and determine brightness.
  *          of each pixel. Based on that, print the appropriate ASCII char.
+ * Returns: Nothing. Prints to command line.
  */
-func convertToASCII(file io.Reader) {
+func convertToASCII(img image.Image) {
 	var luminosity float32
 	var red, green, blue uint32
 	var charPosition, red8bit, green8bit, blue8bit int
@@ -74,8 +88,8 @@ func convertToASCII(file io.Reader) {
 	//https://people.sc.fsu.edu/~jburkardt/data/ascii_art_grayscale/ascii_art_grayscale.html
 	asciiChars := "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
 
-	img, _, err := image.Decode(file)
-	errorCheck(err)
+	// img, _, err := image.Decode(file)
+	// errorCheck(err)
 
 	//Y outer loop X inner loop so we print row by row. Otherwise image is
 	//rotated
@@ -87,7 +101,8 @@ func convertToASCII(file io.Reader) {
 			red, green, blue, _ = img.At(x, y).RGBA()
 			red8bit, green8bit, blue8bit = int(red>>8), int(green>>8), int(blue>>8)
 			//Luminosity Formula: https://stackoverflow.com/a/596241/12148894
-			luminosity = 0.2126*float32(red8bit) + 0.7152*float32(green8bit) + 0.0722*float32(blue8bit)
+			luminosity = 0.2126*float32(red8bit) + 0.7152*float32(green8bit) +
+				0.0722*float32(blue8bit)
 			//3.65 is the difference in luminosity needed to get a different character.
 			charPosition = int(luminosity / 3.65)
 			//We print character by character because that's faster than
