@@ -1,6 +1,7 @@
 /*
  * Dylan Todtfeld
  * Package lets user convert image into ascii art.
+ * Usage: ./ascii -i [image name] -r [width] [height]
  */
 package main
 
@@ -11,7 +12,8 @@ import (
 	"io"
 	"log"
 	"os"
-	"github.com/nfnt/resize"
+	"strconv"
+	// "github.com/nfnt/resize"
 )
 
 //TODO: suport image resizing
@@ -30,17 +32,33 @@ func main() {
  *          provided.
  */
 func commandLineArgs() string {
-	if len(os.Args) > 2 {
-		fmt.Println("Error: Only one file allowed!")
+	var fileName string
+	var width, height int64
+	var err error
+
+	if len(os.Args) > 6 {
+		fmt.Println("Error: Too many arguments")
 		os.Exit(1)
 	} else if len(os.Args) == 0 {
 		fmt.Println("Error: must provide a file name.")
 		os.Exit(1)
 	}
-	fileName := os.Args[1]
-	fmt.Println("You want a picture of " + fileName + ", right?")
+	for i := 0; i < len(os.Args); i++ {
+		if os.Args[i] == "-i" {
+			fileName = os.Args[i+1]
+		}
+		if os.Args[i] == "-r" {
+			width, err = strconv.ParseInt(os.Args[i+1], 10, 64)
+			errorCheck(err)
+			height, err = strconv.ParseInt(os.Args[i+2], 10, 64)
+			errorCheck(err)
+		}
+	}
+	fmt.Println("You want a picture of " + fileName + " that's " + strconv.FormatInt(width, 10) + " by " + strconv.FormatInt(height, 10) + ", right?")
 	return fileName
 }
+
+
 
 /*
  * Parameter: An io.Reader object
