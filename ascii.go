@@ -12,11 +12,9 @@ import (
 	"image/png"
 	"log"
 	"os"
-	// "strconv"
 	"github.com/nfnt/resize"
 )
 
-//TODO: suport image resizing
 //FIXME: crashes when you input negative numbers
 func main() {
 	//TODO: support formats other than png
@@ -56,15 +54,22 @@ func commandLineArgs() (string, int64, int64) {
 
 /*
  * Parameters: image.Image to resize, width to resize to, height to resize to.
- * Purpose: Resize the image to the specified paramete,rs.
+ * Purpose: Resize the image to the specified paramete,rs. When either height
+ *          or width is 0 and the other isn't, it autoscales.
  * Returns: image.Image object.
  */ 
+//TODO: change width and height throughout program to uints so negativity isn't
+//      an option
 func resizeImage(img image.Image, width int64, height int64) image.Image {
-	//User doesn't want to reseize
-	if width == -1 && height == -1 {
-		return img
+	//I don't have an option if they don't want to resize b/c I resize by 
+	//default
+	//If the width and height are zero, just print an empty line. Then quit.
+	if width == 0 && height == 0 {
+		fmt.Println("")
+		os.Exit(0)
 	}
-	return resize.Resize(uint(width), uint(height), img, resize.Lanczos3) //TODO: which algo should be here?
+	//Lanczos3 is slower than other options but higher quality product
+	return resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
 }
 
 /*
@@ -81,9 +86,6 @@ func convertToASCII(img image.Image) {
 	//Got ascii characters from this link:
 	//https://people.sc.fsu.edu/~jburkardt/data/ascii_art_grayscale/ascii_art_grayscale.html
 	asciiChars := "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
-
-	// img, _, err := image.Decode(file)
-	// errorCheck(err)
 
 	//Y outer loop X inner loop so we print row by row. Otherwise image is
 	//rotated
