@@ -9,21 +9,26 @@ import (
 	"flag"
 	"fmt"
 	"image"
-	"image/png"
 	"log"
 	"os"
 	"github.com/nfnt/resize"
+
+	//import only for side-effect of recognizing file format format when 
+	//decoding image
+	_ "image/png" 
+	_ "image/jpeg"
 )
 
 func main() {
-	//TODO: support formats other than png
-	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
 	imageName, width, height := commandLineArgs()
 	openedFile, err := os.Open("./" + imageName)
 	errorCheck(err)
+	fmt.Println("test")
 	img, _, err := image.Decode(openedFile)
+	fmt.Println("test2")
 	errorCheck(err)
 	img = resizeImage(img, width, height)
+	fmt.Println("test3")
 	convertToASCII(img)
 }
 
