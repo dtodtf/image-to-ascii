@@ -2,6 +2,8 @@
 This program takes the provided png or jpeg file and outputs it on the command line as ASCII art.
 
 ## Usage
+Acquire the `ascii` executable by downloading it or by compiling `ascii.go` with `go build ascii.go`.
+To use the `ascii` executable:
 ```
  ./ascii -image [file name] -width [int] -height [int]
     -image [string]
