@@ -21,5 +21,14 @@ To use the `ascii` executable:
   ## Image formats
   This tool only supports png and jpg images.
 
+  ## Examples
+  `./ascii -image spongebob.png` </br>
+  <img src="./example_images/spongebob.png" width=300>
+  <img src="./example_images/spongebob_ascii.png" width=300>
+
+  `./ascii -image winnie.jpg -width 300` </br>
+  <img src="./example_images/winnie.jpg" width=300>
+  <img src="./example_images/winnie_ascii.png" width=300>
+
   ## Acknowledgements
   Thanks to Github user [nfnt](https://github.com/nfnt) for creating [the resize package](https://github.com/nfnt/resize) used in this tool.
