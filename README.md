@@ -18,7 +18,7 @@ To use the `ascii` executable:
   ## Automatically Scales Image
   This tool automatically scales your image so the width is 80 characters because that's the size of a standard terminal window. If you want to change the dimensions of your ✨magnificent✨ artwork, use the `-width` and `-height` flags.
 
-  ## Image formats
+  ## Image Formats
   This tool only supports png and jpg images.
 
   ## Examples
@@ -30,8 +30,8 @@ To use the `ascii` executable:
   <img src="./example_images/winnie.jpg" width=300>
   <img src="./example_images/winnie_ascii.png" width=300>
 
-  ## Next steps
+  ## Next Steps
   I might turn this into a website if there's any interest in it/if I have the time.
-  
+
   ## Acknowledgements
   Thanks to Github user [nfnt](https://github.com/nfnt) for creating [the resize package](https://github.com/nfnt/resize) used in this tool.
