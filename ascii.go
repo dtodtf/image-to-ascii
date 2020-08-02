@@ -1,7 +1,7 @@
 /*
  * Dylan Todtfeld
  * Package lets user convert image into ascii art.
- * Usage: ./ascii -i [image name] -r [width] [height]
+ * Usage: ./ascii -image [image name] -width [int] - height [int]
  */
 package main
 
