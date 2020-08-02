@@ -75,7 +75,7 @@ func resizeImage(img image.Image, width int64, height int64) image.Image {
  */
 func convertToASCII(img image.Image) {
 	var luminosity float32
-	var red, green, blue uint32
+	var red, green, blue, alpha uint32
 	var charPosition, red8bit, green8bit, blue8bit int
 
 	//Got ascii characters from this link:
@@ -92,11 +92,18 @@ func convertToASCII(img image.Image) {
 		for x := img.Bounds().Min.X; x < width; x++ {
 			//.RGBA() premultiplies rgb values by the alpha.
 			//To get just RGB vals out of 255, we bitshift right 8 times.
-			red, green, blue, _ = img.At(x, y).RGBA()
+			red, green, blue, alpha = img.At(x, y).RGBA()
 			red8bit, green8bit, blue8bit = int(red>>8), int(green>>8), int(blue>>8)
 			//Luminosity Formula: https://stackoverflow.com/a/596241/12148894
-			luminosity = 0.2126*float32(red8bit) + 0.7152*float32(green8bit) +
-				0.0722*float32(blue8bit)
+			//make transparent pixels appear as transparent by giving them max
+			//brightness
+			if alpha == 0 { 
+				luminosity = 255
+			} else {
+				luminosity = 0.2126*float32(red8bit) + 0.7152*float32(green8bit) +
+					0.0722*float32(blue8bit)
+			}
+			
 			//3.65 is the difference in luminosity needed to get a different character.
 			charPosition = int(luminosity / 3.65)
 			//We print character by character because that's faster than
