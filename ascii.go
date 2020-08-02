@@ -126,7 +126,7 @@ func convertToASCII(img image.Image) {
 }
 
 /*
- * Paramter: An error
+ * Parameter: An error
  * Purpose: Crash the program if there is an error
  * Returns: Nothing. Just crashes program.
  */
