@@ -6,17 +6,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"image"
 	"image/png"
-	// "io"
 	"log"
 	"os"
-	"strconv"
+	// "strconv"
 	"github.com/nfnt/resize"
 )
 
 //TODO: suport image resizing
+//FIXME: crashes when you input negative numbers
 func main() {
 	//TODO: support formats other than png
 	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
@@ -34,41 +35,28 @@ func main() {
  * Purpose: Returns name of file to convert and size the new image should be.
  * Returns: The image file name, the desired width, the desired height.
  */
-//TODO: get strict on arguments
 func commandLineArgs() (string, int64, int64) {
-	var fileName string
-	var width, height int64 = -1, -1
-	var err error
+	var imageNamePtr *string
+	var widthPtr, heightPtr *int64
 
-	if len(os.Args) > 6 {
-		fmt.Println("Error: Too many arguments")
-		os.Exit(1)
-	} else if len(os.Args) == 0 {
-		fmt.Println("Error: must provide a file name.")
+	//Default value is "" b/c this is required. Dummy so if the file name is 
+	//still "" later in this function, we crash.
+	imageNamePtr = flag.String("image", "", "Required: the path of the image to turn into ASCII art.")
+	//Default value is 80 so it fits on a standard terminal window. May change.
+	widthPtr = flag.Int64("width", 80, "The width of the resulting ASCII art.")
+	//Default value is 0 so the image scales automatically.
+	heightPtr = flag.Int64("height", 0, "The height of the resulting ASCII art.")
+	flag.Parse()
+	if *imageNamePtr == "" {
+		fmt.Println("Error: must provide an image.")
 		os.Exit(1)
 	}
-	for i := 0; i < len(os.Args); i++ {
-		if os.Args[i] == "-i" {
-			fileName = os.Args[i+1]
-		}
-		if os.Args[i] == "-r" {
-			//Fun trivia: ParseInt always returns int64. It's up to me to
-			//convert to int32 later!
-			width, err = strconv.ParseInt(os.Args[i+1], 10, 64)
-			errorCheck(err)
-			height, err = strconv.ParseInt(os.Args[i+2], 10, 64)
-			errorCheck(err)
-		}
-	}
-	fmt.Println("You want a picture of " + fileName + " that's " +
-		strconv.FormatInt(width, 10) + " by " +
-		strconv.FormatInt(height, 10) + ", right?")
-	return fileName, width, height
+	return *imageNamePtr, *widthPtr, *heightPtr
 }
 
 /*
  * Parameters: image.Image to resize, width to resize to, height to resize to.
- * Purpose: Resize the image to the specified parameters.
+ * Purpose: Resize the image to the specified paramete,rs.
  * Returns: image.Image object.
  */ 
 func resizeImage(img image.Image, width int64, height int64) image.Image {
