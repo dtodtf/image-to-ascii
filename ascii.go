@@ -114,7 +114,8 @@ func convertToASCII(img image.Image) {
 					0.7152*float32(green8bit) + 0.0722*float32(blue8bit)
 			}
 
-			//3.65 is the difference in luminosity needed to get a different character.
+			//3.65 is the difference in luminosity needed to get a different 
+			//character.
 			charPosition = int(luminosity / 3.65)
 			//We print character by character because that's faster than
 			//adding every character to a string and then printing the string
