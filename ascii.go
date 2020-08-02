@@ -15,7 +15,6 @@ import (
 	"github.com/nfnt/resize"
 )
 
-//FIXME: crashes when you input negative numbers
 func main() {
 	//TODO: support formats other than png
 	image.RegisterFormat("png", "png", png.Decode, png.DecodeConfig)
@@ -44,7 +43,12 @@ func commandLineArgs() (string, int64, int64) {
 	widthPtr = flag.Int64("width", 80, "The width of the resulting ASCII art.")
 	//Default value is 0 so the image scales automatically.
 	heightPtr = flag.Int64("height", 0, "The height of the resulting ASCII art.")
+
 	flag.Parse()
+	if *widthPtr < 0 || *heightPtr < 0 {
+		fmt.Println("Error: negative width/height not allowed.")
+		os.Exit(1)
+	}
 	if *imageNamePtr == "" {
 		fmt.Println("Error: must provide an image.")
 		os.Exit(1)
@@ -58,8 +62,6 @@ func commandLineArgs() (string, int64, int64) {
  *          or width is 0 and the other isn't, it autoscales.
  * Returns: image.Image object.
  */ 
-//TODO: change width and height throughout program to uints so negativity isn't
-//      an option
 func resizeImage(img image.Image, width int64, height int64) image.Image {
 	//I don't have an option if they don't want to resize b/c I resize by 
 	//default
