@@ -11,12 +11,13 @@ import (
 	"image"
 	"log"
 	"os"
+
 	"github.com/nfnt/resize"
 
-	//import only for side-effect of recognizing file format format when 
+	//import only for side-effect of recognizing file format format when
 	//decoding image
-	_ "image/png" 
 	_ "image/jpeg"
+	_ "image/png"
 )
 
 func main() {
@@ -38,13 +39,15 @@ func commandLineArgs() (string, int64, int64) {
 	var imageNamePtr *string
 	var widthPtr, heightPtr *int64
 
-	//Default value is "" b/c this is required. Dummy so if the file name is 
+	//Default value is "" b/c this is required. Dummy so if the file name is
 	//still "" later in this function, we crash.
-	imageNamePtr = flag.String("image", "", "Required: the path of the image to turn into ASCII art.")
+	imageNamePtr = flag.String("image", "",
+		"Required: the path of the image to turn into ASCII art.")
 	//Default value is 80 so it fits on a standard terminal window. May change.
 	widthPtr = flag.Int64("width", 80, "The width of the resulting ASCII art.")
 	//Default value is 0 so the image scales automatically.
-	heightPtr = flag.Int64("height", 0, "The height of the resulting ASCII art.")
+	heightPtr = flag.Int64("height", 0,
+		"The height of the resulting ASCII art.")
 
 	flag.Parse()
 	if *widthPtr < 0 || *heightPtr < 0 {
@@ -63,9 +66,9 @@ func commandLineArgs() (string, int64, int64) {
  * Purpose: Resize the image to the specified paramete,rs. When either height
  *          or width is 0 and the other isn't, it autoscales.
  * Returns: image.Image object.
- */ 
+ */
 func resizeImage(img image.Image, width int64, height int64) image.Image {
-	//I don't have an option if they don't want to resize b/c I resize by 
+	//I don't have an option if they don't want to resize b/c I resize by
 	//default
 	//If the width and height are zero, just print an empty line. Then quit.
 	if width == 0 && height == 0 {
@@ -99,17 +102,18 @@ func convertToASCII(img image.Image) {
 			//.RGBA() premultiplies rgb values by the alpha.
 			//To get just RGB vals out of 255, we bitshift right 8 times.
 			red, green, blue, alpha = img.At(x, y).RGBA()
-			red8bit, green8bit, blue8bit = int(red>>8), int(green>>8), int(blue>>8)
+			red8bit, green8bit, blue8bit = int(red>>8), int(green>>8),
+				int(blue>>8)
 			//Luminosity Formula: https://stackoverflow.com/a/596241/12148894
 			//make transparent pixels appear as transparent by giving them max
 			//brightness
-			if alpha == 0 { 
+			if alpha == 0 {
 				luminosity = 255
 			} else {
 				luminosity = 0.2126*float32(red8bit) + 0.7152*float32(green8bit) +
 					0.0722*float32(blue8bit)
 			}
-			
+
 			//3.65 is the difference in luminosity needed to get a different character.
 			charPosition = int(luminosity / 3.65)
 			//We print character by character because that's faster than
