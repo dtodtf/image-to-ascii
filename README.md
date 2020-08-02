@@ -30,5 +30,8 @@ To use the `ascii` executable:
   <img src="./example_images/winnie.jpg" width=300>
   <img src="./example_images/winnie_ascii.png" width=300>
 
+  ## Next steps
+  I might turn this into a website if there's any interest in it/if I have the time.
+  
   ## Acknowledgements
   Thanks to Github user [nfnt](https://github.com/nfnt) for creating [the resize package](https://github.com/nfnt/resize) used in this tool.
