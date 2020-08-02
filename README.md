@@ -13,6 +13,9 @@ This program takes the provided png or jpeg file and outputs it on the command l
   ```      
   If either width or height (but not both) is set to 0, the resulting ASCII art will be scaled to be in the original ratio.
   
+  ## Automatically Scales Image
+  This tool automatically scales your image so the width is 80 characters because that's the size of a standard terminal window. If you want to change the dimensions of your ✨magnificent✨ artwork, use the `-width` and `-height` flags.
+
   ## Image formats
   This tool only supports png and jpg images.
 
