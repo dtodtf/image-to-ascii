@@ -23,12 +23,9 @@ func main() {
 	imageName, width, height := commandLineArgs()
 	openedFile, err := os.Open("./" + imageName)
 	errorCheck(err)
-	fmt.Println("test")
 	img, _, err := image.Decode(openedFile)
-	fmt.Println("test2")
 	errorCheck(err)
 	img = resizeImage(img, width, height)
-	fmt.Println("test3")
 	convertToASCII(img)
 }
 
