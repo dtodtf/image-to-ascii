@@ -110,8 +110,8 @@ func convertToASCII(img image.Image) {
 			if alpha == 0 {
 				luminosity = 255
 			} else {
-				luminosity = 0.2126*float32(red8bit) + 0.7152*float32(green8bit) +
-					0.0722*float32(blue8bit)
+				luminosity = 0.2126*float32(red8bit) + 
+					0.7152*float32(green8bit) + 0.0722*float32(blue8bit)
 			}
 
 			//3.65 is the difference in luminosity needed to get a different character.
